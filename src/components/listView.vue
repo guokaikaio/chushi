@@ -1,9 +1,12 @@
 <template>
   <div class="om-list-box">
+    <audio id="notice" loop="loop">
+        <source src="/src/assets/mp3/dian.mp3" type="audio/mpeg" />
+    </audio>
       <div class="om-list om-list-img" v-for="item in list" :key="item.id" @click="toPath(item)">
           <div class="om-list-name om-list-src">{{item.name}}</div>
           <div class="om-list-name om-ellipsis">X{{item.count}}份</div>
-          <div class="om-list-text om-ellipsis">桌{{item.desk}}</div>
+          <div class="om-list-text om-ellipsis">桌{{item.desk}},{{item.spec}},{{item.remark}}</div>
       </div>
   </div>
 </template>
@@ -32,7 +35,7 @@
             'count': 1,
             'desk': '3',
             'spec': '不放葱花',
-            'remark': '特殊要求',
+            'remark': '',
             'timestamp': 1514449795,
             'cuicai': 0,
             'tuicai': 0,
@@ -43,8 +46,8 @@
             'name': '水煮肉片',
             'count': 1,
             'desk': '3',
-            'spec': '不放鱼+不放葱花',
-            'remark': '特殊要求',
+            'spec': '',
+            'remark': '',
             'timestamp': 1514449795,
             'cuicai': 0,
             'tuicai': 0,
@@ -55,8 +58,8 @@
             'name': '蒜苔肉丝',
             'count': 1,
             'desk': '3',
-            'spec': '不放鱼+不放葱花',
-            'remark': '特殊要求',
+            'spec': '不放肉',
+            'remark': '',
             'timestamp': 1514449795,
             'cuicai': 0,
             'tuicai': 0,
@@ -67,7 +70,7 @@
             'name': '大盘鸡',
             'count': 1,
             'desk': '3',
-            'spec': '不放鱼+不放葱花',
+            'spec': '',
             'remark': '特殊要求',
             'timestamp': 1514449795,
             'cuicai': 0,
@@ -79,8 +82,8 @@
             'name': '铁板米饭',
             'count': 1,
             'desk': '3',
-            'spec': '不放鱼+不放葱花',
-            'remark': '特殊要求',
+            'spec': '不要蒜',
+            'remark': '',
             'timestamp': 1514449795,
             'cuicai': 0,
             'tuicai': 0,
@@ -94,17 +97,21 @@
     },
     methods: {
       toPath: function (item){
+        this.list.splice(item.id,item.id)
         if (item.cuicai === 0){
-          alert(item.name + '催菜了！')
+        //  alert(item.name + '催菜了！')
+          item.cuicai++
+        }else {
+          document.getElementById('notice').play();
         }
         if (item.zuocai === 0){
           alert(item.name + '开始做菜了！')
           item.zuocai++
         }
         if (item.tuicai === 0){
-          item.tuicai()
+          this.list.pop(item)
         } else if (item.tuicai === 1){
-          item.list.pop()
+          item.pop()
         }
       }
     }
@@ -150,8 +157,8 @@
     margin-top:-5px;
     border-top:1px solid #ddd;
     border-right:1px solid #ddd;
-    -webkit-transform:rotate(45deg);
-    transform:rotate(45deg);
+    -webkit-transform:rotate(150deg);
+    transform:rotate(150deg);
   }
   .om-list.om-list-img {
     padding:10px 20px 10px 70px;
