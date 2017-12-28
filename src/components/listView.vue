@@ -1,56 +1,90 @@
 <template>
   <div class="om-list-box">
-
-      <div class="om-list om-list-img" v-for="item in list" :key="item.id" @click="toPath(item.id)">
+      <div class="om-list om-list-img" v-for="item in list" :key="item.id" @click="toPath(item)">
           <div class="om-list-name om-list-src">{{item.name}}</div>
           <div class="om-list-name om-ellipsis">X{{item.count}}份</div>
           <div class="om-list-text om-ellipsis">桌{{item.desk}}</div>
       </div>
-
   </div>
 </template>
 
 <script>
   export default {
     name: 'listView',
-    data(){
+    data () {
       return {
         list: [
           {
-            'count': 1,
-            'desk': '3',
+            'id': '1',
             'name': '鱼香肉丝',
-            'id':1
-          },
-          {
             'count': 1,
             'desk': '3',
-            'name': '香菇鸡丁',
-            'id': 2
+            'spec': '不放鱼+不放葱花',
+            'remark': '特殊要求',
+            'timestamp': 1514449795,
+            'cuicai': 0,
+            'tuicai': 0,
+            'zuocai': 1,
           },
           {
+            'id': '2',
+            'name': '红烧茄子',
             'count': 1,
-            'desk': '4',
-            'name': '炖白菜',
-            'id': 3
+            'desk': '3',
+            'spec': '不放葱花',
+            'remark': '特殊要求',
+            'timestamp': 1514449795,
+            'cuicai': 0,
+            'tuicai': 0,
+            'zuocai': 1,
           },
           {
+            'id': '3',
+            'name': '水煮肉片',
             'count': 1,
-            'desk': '4',
-            'name': '花生米',
-            'id': 4
+            'desk': '3',
+            'spec': '不放鱼+不放葱花',
+            'remark': '特殊要求',
+            'timestamp': 1514449795,
+            'cuicai': 0,
+            'tuicai': 0,
+            'zuocai': 1,
           },
           {
+            'id': '4',
+            'name': '蒜苔肉丝',
             'count': 1,
-            'desk': '5',
+            'desk': '3',
+            'spec': '不放鱼+不放葱花',
+            'remark': '特殊要求',
+            'timestamp': 1514449795,
+            'cuicai': 0,
+            'tuicai': 0,
+            'zuocai': 0,
+          },
+          {
+            'id': '5',
             'name': '大盘鸡',
-            'id': 5
+            'count': 1,
+            'desk': '3',
+            'spec': '不放鱼+不放葱花',
+            'remark': '特殊要求',
+            'timestamp': 1514449795,
+            'cuicai': 0,
+            'tuicai': 0,
+            'zuocai': 0,
           },
           {
-            'count':1,  
-            'desk':'5',
-            'name':'小羊腿',
-            'id':6
+            'id': '6',
+            'name': '铁板米饭',
+            'count': 1,
+            'desk': '3',
+            'spec': '不放鱼+不放葱花',
+            'remark': '特殊要求',
+            'timestamp': 1514449795,
+            'cuicai': 0,
+            'tuicai': 0,
+            'zuocai': 0,
           }
         ]
       }
@@ -59,8 +93,19 @@
 
     },
     methods: {
-      toPath: function (id) {
-       
+      toPath: function (item){
+        if (item.cuicai === 0){
+          alert(item.name + '催菜了！')
+        }
+        if (item.zuocai === 0){
+          alert(item.name + '开始做菜了！')
+          item.zuocai++
+        }
+        if (item.tuicai === 0){
+          item.tuicai()
+        } else if (item.tuicai === 1){
+          item.list.pop()
+        }
       }
     }
   }
@@ -73,11 +118,17 @@
     white-space:nowrap;
     text-overflow:ellipsis;
   }
+  .om-list-box {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+  }
   .om-list {
     position:relative;
     padding:10px 20px 10px 10px;
     border-bottom:1px solid #45424f;
     text-align:left;
+    background: -webkit-linear-gradient(top,#0086F3, #0086FF);
   }
   .om-list .om-list-name {
     height:30px;
