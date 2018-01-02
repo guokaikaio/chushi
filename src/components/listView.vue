@@ -3,8 +3,8 @@
     <audio id="notice" loop="loop">
         <source src="/src/assets/mp3/dian.mp3" type="audio/mpeg" />
     </audio>
-      <div class="om-list " draggable="true"
-       v-bind:class="{'istuicai':item.tuicai === 1,'iscuncai':item.cuicai ===1,'iszuocai':item.zuocai ===1,'iszuocaifinished':item.zuocai === 2}"  v-for="item in list" :key="item.id"
+      <div class="om-list "
+       v-bind:class="{'istuicai':item.tuicai === 1,'iscuicai':item.cuicai ===1,'iszuocai':item.zuocai ===1,'iszuocaifinished':item.zuocai === 2,'iszuocaifinishedconfirm':item.zuocai === 3 }"  v-for="item in list" :key="item.id"
         @touchstart='touchStart'
         @touchmove='touchMove'
         @touchend='touchEnd'
@@ -22,7 +22,7 @@
 <script>
   export default {
     name: 'listView',
-    data () {
+    data:function() {
       return {
         startX:0,   //触摸位置
         endX:0,     //结束位置
@@ -31,19 +31,19 @@
         deleteSlider: '',//滑动时的效果,使用v-bind:style="deleteSlider"
         list: [
           {
-            'id': '1',
+            'id': 'd1',
             'name': '鱼香肉丝',
             'count': 1,
             'desk': '3',
             'spec': '不放鱼+不放葱花',
             'remark': '特殊要求',
             'timestamp': 1514449795,
-            'cuicai': 0,
+            'cuicai': 1,
             'tuicai': 0,
             'zuocai': 0,
           },
           {
-            'id': '2',
+            'id': 'd2',
             'name': '红烧茄子',
             'count': 1,
             'desk': '3',
@@ -55,7 +55,7 @@
             'zuocai': 0,
           },
           {
-            'id': '3',
+            'id': 'd3',
             'name': '水煮肉片',
             'count': 1,
             'desk': '3',
@@ -67,7 +67,7 @@
             'zuocai': 0,
           },
           {
-            'id': '4',
+            'id': 'd4',
             'name': '蒜苔肉丝',
             'count': 1,
             'desk': '3',
@@ -79,19 +79,19 @@
             'zuocai': 0,
           },
           {
-            'id': '5',
+            'id': 'd5',
             'name': '大盘鸡',
             'count': 1,
             'desk': '3',
             'spec': '',
             'remark': '特殊要求',
             'timestamp': 1514449795,
-            'cuicai': 0,
+            'cuicai': 1,
             'tuicai': 0,
             'zuocai': 0,
           },
           {
-            'id': '6',
+            'id': 'd6',
             'name': '超级干煸铁板米饭',
             'count': 1,
             'desk': '3',
@@ -103,7 +103,7 @@
             'zuocai': 0,
           }, 
           {
-            'id': '8',
+            'id': 'd8',
             'name': '大盘鸡',
             'count': 1,
             'desk': '3',
@@ -115,7 +115,7 @@
             'zuocai': 0,
           },
           {
-            'id': '7',
+            'id': 'd7',
             'name': '大盘鸡',
             'count': 1,
             'desk': '3',
@@ -126,7 +126,7 @@
             'tuicai': 0,
             'zuocai': 0,
           },  {
-            'id': '11',
+            'id': 'd11',
             'name': '超级干煸铁板米饭',
             'count': 1,
             'desk': '3',
@@ -138,7 +138,7 @@
             'zuocai': 0,
           }, 
           {
-            'id': '10',
+            'id': 'd10',
             'name': '大盘鸡',
             'count': 1,
             'desk': '3',
@@ -150,7 +150,7 @@
             'zuocai': 0,
           },
           {
-            'id': '9',
+            'id': 'd9',
             'name': '大盘鸡',
             'count': 1,
             'desk': '3',
@@ -175,10 +175,12 @@
         }
         //做菜
         if (item.zuocai ===0){
-          alert(item.name + '开始做菜了！')
+         // alert(item.name + '开始做菜了！')
           item.zuocai++
         }else if (item.zuocai ===1){
-          alert(item.name + '做完了！')
+         // alert(item.name + '做完了！')
+          item.zuocai++
+        }else if (item.zuocai ===2){
           item.zuocai++
         }
       },
@@ -192,46 +194,11 @@
         },
         touchMove(ev){
           ev = ev || event;
-          //获取删除按钮的宽度，此宽度为滑块左滑的最大距离
-          let wd=100;
-          if(ev.touches.length == 1) {
-            // 滑动时距离浏览器左侧实时距离
-            this.moveX = ev.touches[0].clientX
-            //起始位置减去 实时的滑动的距离，得到手指实时偏移距离
-            this.disX = this.startX - this.moveX;
-            console.log(this.disX)
-            // 如果是向右滑动或者不滑动，不改变滑块的位置
-            if(this.disX < 0 || this.disX == 0) {
-              this.deleteSlider = "transform:translateX(0px)";
-              // 大于0，表示左滑了，此时滑块开始滑动 
-            }else if (this.disX > 0) {
-              //具体滑动距离我取的是 手指偏移距离*5。
-              this.deleteSlider = "transform:translateX(-" + this.disX*5 + "px)";
-            // 最大也只能等于删除按钮宽度 
-              if (this.disX*5 >=wd) {
-                this.deleteSlider = "transform:translateX(-" +wd+ "px)";
-              }
-            }
-          }
+
         },
         touchEnd(ev){
         ev = ev || event;
-        let wd=10;
-        if (ev.changedTouches.length == 1) {
-              let endX = ev.changedTouches[0].clientX;
-                
-                  this.disX = this.startX - endX;
-                  console.log(this.disX)
-                  //如果距离小于删除按钮一半,强行回到起点
-                  
-                  if ((this.disX*5) < (wd/2)) {
-                    
-                      this.deleteSlider = "transform:translateX(0px)";
-                  }else{
-                      //大于一半 滑动到最大值
-                        this.deleteSlider = "transform:translateX(-"+wd+ "px)";
-                  }
-              }
+
           }      
         }
   }
@@ -290,7 +257,7 @@
     display: none;
   }
   .iscuicai{
-    background: red;
+       -webkit-animation: twinkling 1s infinite ease-in-out  
   }
   .iszuocai{
     background: yellowgreen;
@@ -300,5 +267,32 @@
     text-decoration: line-through;
     text-decoration-line: li
   }
+  .iszuocaifinishedconfirm{
+    display: none;
+  }
+  .animated{  
+    -webkit-animation-duration: 1s;  
+    animation-duration: 1s;  
+    -webkit-animation-fill-mode: both;  
+    animation-fill-mode: both  
+} 
+/*闪一闪动画*/
+@-webkit-keyframes twinkling{  
+    0%{  
+        opacity: 0.5;  
+    }  
+    100%{  
+        opacity: 1;  
+    }  
+}  
+@keyframes twinkling{  
+    0%{  
+        opacity: 0.5;  
+    }  
+    100%{  
+        opacity: 1;  
+    }  
+}  
+
 
 </style>
