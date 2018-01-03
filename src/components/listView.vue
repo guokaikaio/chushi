@@ -3,185 +3,53 @@
     <audio id="notice" loop="loop">
         <source src="/src/assets/mp3/dian.mp3" type="audio/mpeg" />
     </audio>
-      <div class="om-list "
-       v-bind:class="{'istuicai':item.tuicai === 1,'iscuicai':item.cuicai ===1,'iszuocai':item.zuocai ===1,'iszuocaifinished':item.zuocai === 2,'iszuocaifinishedconfirm':item.zuocai === 3 }"  v-for="item in list" :key="item.id"
-        @click="toPath(item)">
-          <div class="om-list-header ">
+      <div class="om-list"
+       v-bind:class="{'istuicai':item.tuicai === 1,'iscuicai':item.cuicai ===1,'iszuocai':item.zuocai ===1,'iszuocaifinished':item.zuocai === 2,'iszuocaifinishedconfirm':item.zuocai === 3 }"  v-for="item in mergeList" :key="item.id"  @click="toDo(item)" >
+        <div class="om-list-front" >
+          <div class="om-list-header">
             <div class="om-list-name om-list-ellipsis">{{item.name}}</div>
             <div class="om-list-name ">X{{item.count}}份</div>
           </div>
           <div class="om-list-text om-ellipsis">桌{{item.desk}} {{item.spec}} {{item.remark}}</div>
-          <div class="om-list-name" >
-            回退
-          </div>
+        </div>
+        <div class="om-list-back" v-bind:class="{'om-list-button':item.zuocai === 0}" @click="unDo(item, $event)" >回退</div>
       </div>
   </div>
 </template>
 
 <script>
-const debug = process.env.NODE_ENV !== 'production'
+const debug = process.env.NODE_ENV !== "production";
 export default {
-  name: 'listView',
+  name: "listView",
   data: function() {
     return {
       startX: 0, // 触摸位置
       endX: 0, // 结束位置
       moveX: 0, // 滑动时的位置
       disX: 0, // 移动距离
-      list: [
-        {
-          id: 'd1',
-          name: '鱼香肉丝',
-          count: 1,
-          desk: '3',
-          spec: '不放鱼+不放葱花',
-          remark: '特殊要求',
-          timestamp: 1514449795,
-          cuicai: 1,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd2',
-          name: '红烧茄子',
-          count: 1,
-          desk: '3',
-          spec: '不放葱花',
-          remark: '',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd3',
-          name: '水煮肉片',
-          count: 1,
-          desk: '3',
-          spec: '',
-          remark: '',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd4',
-          name: '蒜苔肉丝',
-          count: 1,
-          desk: '3',
-          spec: '不放肉',
-          remark: '',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd5',
-          name: '大盘鸡',
-          count: 1,
-          desk: '3',
-          spec: '',
-          remark: '特殊要求',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd6',
-          name: '超级干煸铁板米饭',
-          count: 1,
-          desk: '3',
-          spec: '不要蒜',
-          remark: '',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd8',
-          name: '大盘鸡',
-          count: 1,
-          desk: '3',
-          spec: '',
-          remark: '特殊要求',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd7',
-          name: '大盘鸡',
-          count: 1,
-          desk: '3',
-          spec: '',
-          remark: '特殊要求',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd11',
-          name: '超级干煸铁板米饭',
-          count: 1,
-          desk: '3',
-          spec: '不要蒜',
-          remark: '',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd10',
-          name: '大盘鸡',
-          count: 1,
-          desk: '3',
-          spec: '',
-          remark: '特殊要求',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        },
-        {
-          id: 'd9',
-          name: '大盘鸡',
-          count: 1,
-          desk: '3',
-          spec: '',
-          remark: '特殊要求',
-          timestamp: 1514449795,
-          cuicai: 0,
-          tuicai: 0,
-          zuocai: 0
-        }
-      ]
-    }
+      list: []
+    };
   },
   created: function() {
+    const ERR_OK='ok'
+    const baseUrl = "localhost";
     const orderUrl = debug
-      ? '/api/dinner/ordered'
-      : baseUrl + '/api/dinner/ordered';
+      ? "/src/assets/data.json"
+      : baseUrl + "/api/dinner.ordered";
     this.$http
       .get(orderUrl, { params: { dinnerId: this.dinnerId } })
       .then(response => {
         response = response.body;
         if (response.errno === ERR_OK) {
-          this.list = response.data;
+          this.list = response.list;
         }
       });
   },
   methods: {
-    toPath: function(item) {
+    toDo: function(item) {
       // 催菜判断
       if (item.cuicai === 1) {
-        document.getElementById('notice').play();
+        //document.getElementById("notice").play();
       }
       // 做菜
       if (item.zuocai === 0) {
@@ -194,15 +62,20 @@ export default {
         item.zuocai++;
       }
     },
-    computed: {}
-  },
-  filters: {
-    capitalize: function(value) {
-      if (!value) return '';
-      value = value.toString();
-      return value.charAt(0).toUpperCase() + value.slice(1);
+    unDo: function(item, $event) {
+      event.stopPropagation();
+      if(item.zuocai > 0){
+        item.zuocai--
+      }
     }
-  }
+  },
+  computed:{
+    // 合并相同菜品
+      mergeList: function(){
+        let newList=[]
+        return this.list;
+      }
+    }
 };
 </script>
 
@@ -220,6 +93,9 @@ export default {
   font-weight: bold;
 }
 .om-list {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
   z-index: 100;
   transform: 0.3s;
   position: relative;
@@ -227,6 +103,12 @@ export default {
   border-bottom: 1px solid #45424f;
   text-align: left;
   background: -webkit-linear-gradient(top, #0086f3, #0086ff);
+}
+.om-list {
+  padding: 10px 0px 10px 20px;
+}
+.om-list-front {
+  justify-content: space-between;
 }
 .om-list-name {
   height: 30px;
@@ -242,9 +124,6 @@ export default {
   line-height: 20px;
   font-size: 14px;
 }
-.om-list {
-  padding: 10px 20px 10px 10px;
-}
 .om-list-header {
   /*盒模型*/
   display: -webkit-box;
@@ -254,6 +133,16 @@ export default {
   -webkit-box-orient: horizontal; /*属性值：[horizontal]横向/[vertical]纵向*/
   -moz-box-orient: horizontal;
   box-orient: horizontal;
+}
+.om-list-button {
+  display: none;
+}
+.om-list-back {
+  padding: 10px 10px 10px 10px;
+  border-radius: 1px;
+  text-align: center;
+  text-decoration: none;
+  background: hotpink;
 }
 /*退菜不显示*/
 .istuicai {
