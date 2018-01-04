@@ -12,7 +12,7 @@
           </div>
           <div class="om-list-text om-ellipsis">桌{{item.desk}} {{item.spec}} {{item.remark}}</div>
         </div>
-        <div class="om-list-back" v-bind:class="{'om-list-button':item.zuocai === 0}" @click="unDo(item, $event)" >回退</div>
+        <div class="om-list-back" v-bind:class="{'om-list-button':item.zuocai === 0}" @click ="unDo(item, $event)" >回退</div>
       </div>
   </div>
 </template>
@@ -31,21 +31,24 @@ export default {
     };
   },
   created: function() {
-    const ERR_OK='ok'
-    const baseUrl = "localhost";
-    const orderUrl = debug
-      ? "/src/assets/data.json"
-      : baseUrl + "/api/dinner.ordered";
-    this.$http
-      .get(orderUrl, { params: { dinnerId: this.dinnerId } })
-      .then(response => {
-        response = response.body;
-        if (response.errno === ERR_OK) {
-          this.list = response.list;
-        }
-      });
+    setInterval(this.updata, 1000);
   },
   methods: {
+    updata: function() {
+      const ERR_OK = "ok";
+      const baseUrl = "localhost";
+      const orderUrl = debug
+        ? "/src/assets/data.json"
+        : baseUrl + "/api/dinner.ordered";
+      this.$http
+        .get(orderUrl, { params: { dinnerId: this.dinnerId } })
+        .then(response => {
+          response = response.body;
+          if (response.errno === ERR_OK) {
+            this.list = response.list;
+          }
+        });
+    },
     toDo: function(item) {
       // 催菜判断
       if (item.cuicai === 1) {
@@ -64,18 +67,44 @@ export default {
     },
     unDo: function(item, $event) {
       event.stopPropagation();
-      if(item.zuocai > 0){
-        item.zuocai--
+      if (item.zuocai > 0) {
+        item.zuocai--;
       }
     }
   },
-  computed:{
+  computed: {
     // 合并相同菜品
-      mergeList: function(){
-        let newList=[]
-        return this.list;
+    mergeList: function() {
+      let newList = [];
+      for (let i = 0; i < this.list.length; i++) {
+        if (newList.length === 0) {
+          newList.push(this.list[i]);
+        } else {
+          let flag = true;
+          for (let index = 0; index < newList.length; index++) {
+            if (
+              newList[index].name === this.list[i].name &&
+              newList[index].spec === this.list[i].spec
+            ) {
+              // 合并份数
+              newList[index].count = newList[index].count + this.list[i].count;
+              // 合并桌号
+              newList[index].desk =
+                newList[index].desk + "," + this.list[i].count;
+              // 合并id
+              newList[index].id = newList[index].id + "," + this.list[i].id;
+              flag = false;
+              break;
+            }
+          }
+          if (flag) {
+            newList.push(this.list[i]);
+          }
+        }
       }
+      return newList;
     }
+  }
 };
 </script>
 
@@ -114,10 +143,6 @@ export default {
   height: 30px;
   line-height: 30px;
   font-size: 16px;
-  /*占有比例*/
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  box-flex: 1;
 }
 .om-list .om-list-text {
   height: 20px;
@@ -125,14 +150,9 @@ export default {
   font-size: 14px;
 }
 .om-list-header {
-  /*盒模型*/
-  display: -webkit-box;
-  display: -moz-box;
-  display: box;
-  /*横向or纵向*/
-  -webkit-box-orient: horizontal; /*属性值：[horizontal]横向/[vertical]纵向*/
-  -moz-box-orient: horizontal;
-  box-orient: horizontal;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
 }
 .om-list-button {
   display: none;
