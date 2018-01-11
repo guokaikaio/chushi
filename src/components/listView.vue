@@ -10,7 +10,7 @@
             <div class="om-list-name om-list-ellipsis">{{item.name}}</div>
             <div class="om-list-name ">X{{item.count}}份</div>
           </div>
-          <div class="om-list-text om-ellipsis">桌{{item.desk}} {{item.spec}} {{item.remark}}</div>
+          <div class="om-list-text om-ellipsis">{{item.desk}} {{item.spec}} {{item.remark}}</div>
         </div>
         <div class="om-list-back" v-bind:class="{'om-list-button':item.zuocai === 0}" @click ="unDo(item, $event)" >回退</div>
       </div>
@@ -18,50 +18,100 @@
 </template>
 
 <script>
-const debug = process.env.NODE_ENV !== "production";
+import { baseUrl } from "../config/env";
+import { getCookie, setCookie } from "../util/utils";
+const debug = process.env.NODE_ENV === "production";
+const ERR_OK = 0;
+// 获取做菜列表
+let orderUrl = debug
+  ? "/src/assets/data.json"
+  : baseUrl + "/dishzine/api/billDetail/list";
+//  做菜
+let doDish = baseUrl + "/dishzine/api/billDetail/doDish";
+//  做完
+let finishDish = baseUrl + "/dishzine/api/billDetail/finishDish";
+//  确定做完
+let finishDished = baseUrl + "/dishzine/api/billDetail/finishDished";
+//  回退
+let backDished = baseUrl + "/dishzine/api/billDetail/backDished";
+//console.log(urgedDish+"\n"+backDish+"\n"+doDish+"\n"+finishDish)
+//const orderUrl="http://200.200.200.60:8080/dishzine/api/billDetail/list/DN2017111612345678001"
+console.log(orderUrl);
+let intervalid1;
 export default {
   name: "listView",
   data: function() {
     return {
-      startX: 0, // 触摸位置
-      endX: 0, // 结束位置
-      moveX: 0, // 滑动时的位置
-      disX: 0, // 移动距离
+      baseUrl,
       list: []
     };
   },
   created: function() {
-    setInterval(this.updata, 1000);
+    if (getCookie("dinnerId") != null) {
+      let dinnerId = getCookie("dinnerId");
+      console.log(dinnerId);
+      orderUrl = orderUrl + "/" + dinnerId;
+      this.updata();
+    } else {
+      console.log(orderUrl);
+      console.log("no login");
+      setCookie("dinnerId", "DN001", 1);
+    }
+  },
+  mounted: function() {
+    this.intervalid1 = setInterval(this.updata, 30000);
+  },
+  beforeDestroy: function() {
+    clearInterval(intervalid1);
   },
   methods: {
+    change: function(url, bdid) {
+      let arr = bdid.split(",");
+      arr.forEach(element => {
+        let newurl = url + "/" + element;
+        console.log(newurl);
+        this.$http.get(newurl, { params: {} }).then(response => {
+          response = response.body;
+          if (response.errno === ERR_OK) {
+            response.data;
+            console.log(response.data);
+          } else {
+            console.log(response.errno);
+          }
+        });
+      });
+    },
     updata: function() {
-      const ERR_OK = "ok";
-      const baseUrl = "localhost";
-      const orderUrl = debug
-        ? "/src/assets/data.json"
-        : baseUrl + "/api/dinner.ordered";
       this.$http
         .get(orderUrl, { params: { dinnerId: this.dinnerId } })
         .then(response => {
           response = response.body;
           if (response.errno === ERR_OK) {
-            this.list = response.list;
+            this.list = response.data;
+            console.log(this.list);
+          } else {
+            console.log(response.errno);
           }
         });
     },
     toDo: function(item) {
-      // 催菜判断
+      //  催菜判断
       if (item.cuicai === 1) {
         //document.getElementById("notice").play();
       }
-      // 做菜
+      //  做菜
       if (item.zuocai === 0) {
+        //发送做菜请求
+        this.change(doDish, item.id);
         //  alert(item.name + '开始做菜了！')
         item.zuocai++;
       } else if (item.zuocai === 1) {
         //  alert(item.name + '做完了！')
+        this.change(finishDish, item.id);
+        //this.updata();
         item.zuocai++;
       } else if (item.zuocai === 2) {
+        this.change(finishDished, item.id);
         item.zuocai++;
       }
     },
@@ -69,6 +119,8 @@ export default {
       event.stopPropagation();
       if (item.zuocai > 0) {
         item.zuocai--;
+        this.change(backDished, item.id);
+        //this.updata();
       }
     }
   },

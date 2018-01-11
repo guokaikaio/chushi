@@ -1,6 +1,6 @@
 {
-    "errno":"ok",
-    "list":[
+    "errno":0,
+    "data":[
     {
         "id": "d1",
         "name": "鱼香肉丝",
@@ -9,9 +9,9 @@
         "spec": "不放鱼+不放葱花",
         "remark": "特殊要求",
         "timestamp": 1514449795,
-        "cuicai": 1,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "1",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d2",
@@ -21,9 +21,9 @@
         "spec": "不放葱花",
         "remark": "",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d3",
@@ -33,9 +33,9 @@
         "spec": "",
         "remark": "",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d4",
@@ -45,9 +45,9 @@
         "spec": "不放肉",
         "remark": "",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d5",
@@ -57,9 +57,9 @@
         "spec": "",
         "remark": "特殊要求",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d6",
@@ -69,9 +69,9 @@
         "spec": "不要蒜",
         "remark": "",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d8",
@@ -81,9 +81,9 @@
         "spec": "不要面",
         "remark": "drhhfgh",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d7",
@@ -93,9 +93,9 @@
         "spec": "",
         "remark": "特殊要求",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d11",
@@ -105,9 +105,9 @@
         "spec": "不要蒜",
         "remark": "",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d10",
@@ -117,9 +117,9 @@
         "spec": "",
         "remark": "特殊要求",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       },
       {
         "id": "d9",
@@ -129,9 +129,32 @@
         "spec": "",
         "remark": "特殊要求",
         "timestamp": 1514449795,
-        "cuicai": 0,
-        "tuicai": 0,
-        "zuocai": 0
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
+      },   {
+        "id": "d10",
+        "name": "大盘鸡",
+        "count": 1,
+        "desk": "3",
+        "spec": "",
+        "remark": "特殊要求",
+        "timestamp": 1514449795,
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
+      },
+      {
+        "id": "d9",
+        "name": "大盘鸡",
+        "count": 1,
+        "desk": "3",
+        "spec": "",
+        "remark": "特殊要求",
+        "timestamp": 1514449795,
+        "cuicai": "0",
+        "tuicai": "0",
+        "zuocai": "0"
       }
     ]
 }
